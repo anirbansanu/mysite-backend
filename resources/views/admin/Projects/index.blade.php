@@ -33,12 +33,12 @@
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="d-flex justify-content-end">
-                                        <form action="{{ route('projects.index') }}" method="GET">
+                                        <form action="{{ route('admin.projects.index') }}" method="GET">
                                             <div class="input-group input-group-sm" style="width: 250px;">
                                                 <input type="text" name="query"
-                                                    class="form-control float-right" placeholder="Search by Name, Description" value="{{$query ?? ''??""}}">
-                                                <input type="hidden" class="d-none" name="sort_by" value="{{$sort_by ?? ''}}">
-                                                <input type="hidden" class="d-none" name="sort_order" value="{{$sort_order ?? ''}}">
+                                                    class="form-control float-right" placeholder="Search by Name, Description" value="{{$search_query ?? '' ?? ''}}">
+                                                <input type="hidden" class="d-none" name="sort_by" value="{{$sort_by ?? '' ?? 'updated_at'}}">
+                                                <input type="hidden" class="d-none" name="sort_order" value="{{$sort_order ?? 'desc'}}">
                                                 <div class="input-group-append">
                                                     <button type="submit" class="btn btn-default">
                                                         <i class="fas fa-search"></i>
@@ -58,17 +58,20 @@
                                             SL No.
                                         </th>
                                         <th>
-                                            <a class="sortable-link" href="{{ route('projects.index', ['query' => $query ?? '', 'sort_by' => 'title', 'sort_order' => ($sort_by ?? '' == 'title' && $sort_order ?? '' == 'asc') ? 'desc' : 'asc']) }}">
-                                                Title {!! ($sort_by ?? '' == 'title') ? ($sort_order ?? '' == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort"></i>' !!}
+                                            <a class="sortable-link" href="{{ route('admin.projects.index', ['search_query' => $search_query ?? '' , 'sort_by' => 'title', 'sort_order' => ($sort_by ?? ''  == 'title' && $sort_order  == 'asc') ? 'desc' : 'asc']) }}">
+                                                Title {!! ($sort_by ?? ''  == 'title') ? ($sort_order  == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort"></i>' !!}
                                             </a>
                                         </th>
                                         <th>
                                             Types
                                         </th>
+                                        <th>
+                                            Badges
+                                        </th>
                                         <th>Description</th>
                                         <th>
-                                            <a class="sortable-link" href="{{ route('projects.index', ['query' => $query ?? '', 'sort_by' => 'updated_at', 'sort_order' => ($sort_by ?? '' == 'updated_at' && $sort_order ?? '' == 'asc') ? 'desc' : 'asc']) }}">
-                                                Updated At {!! ($sort_by ?? '' == 'updated_at') ? ($sort_order ?? '' == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort"></i>' !!}
+                                            <a class="sortable-link" href="{{ route('admin.projects.index', ['search_query' => $search_query ?? '' , 'sort_by' => 'updated_at', 'sort_order' => ($sort_by ?? ''  == 'updated_at' && $sort_order  == 'asc') ? 'desc' : 'asc']) }}">
+                                                Updated At {!! ($sort_by ?? ''  == 'updated_at') ? ($sort_order  == 'asc' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>') : '<i class="fas fa-sort"></i>' !!}
                                             </a>
                                         </th>
                                         <th>Actions</th>
@@ -79,13 +82,32 @@
                                         <tr>
                                             <td>{{$projects->firstItem() + $loop->index}}</td>
                                             <td>{{ $project->title }}</td>
+                                            @php
+                                                $types = json_decode($project->type, true); // Convert JSON string to PHP array
+                                                $badgeColors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+                                            @endphp
                                             <td>
-                                                @php
-                                                    $types = json_decode($project->type, true); // Convert JSON string to PHP array
-                                                @endphp
                                                 @if(is_array($types))
                                                     @foreach($types as $type)
-                                                        <span class="badge badge-info">{{ $type }}</span>
+                                                        @php
+                                                            $randomColor = $badgeColors[array_rand($badgeColors)]; // Select a random color from $badgeColors
+                                                            $colorClass = 'badge badge-' . $randomColor; // Generate the color class
+                                                        @endphp
+                                                        <span class="{{ $colorClass }}">{{ $type }}</span>
+                                                    @endforeach
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @php
+                                                    $badges = json_decode($project->badges, true); // Convert JSON string to PHP array
+                                                @endphp
+                                                @if(is_array($badges))
+                                                    @foreach($badges as $badge)
+                                                        @php
+                                                            $randomColor = $badgeColors[array_rand($badgeColors)]; // Select a random color from $badgeColors
+                                                            $colorClass = 'badge badge-' . $randomColor; // Generate the color class
+                                                        @endphp
+                                                        <span class="{{ $colorClass }}">{{ $badge }}</span>
                                                     @endforeach
                                                 @endif
                                             </td>
@@ -93,8 +115,8 @@
                                             
                                             <td>{{ $project->updated_at }}</td>
                                             <td>
-                                                {{-- <x-actions.edit-btn route="projects.edit" label="Edit" :route-params="[$project->id]" /> --}}
-                                                {{-- <x-actions.delete-btn route="projects.destroy" label="Delete" :route-params="[$project->id]" alertTitle="Delete {{$project->name}}"/> --}}
+                                                <x-actions.edit-btn route="admin.projects.edit" label="Edit" :route-params="[$project->id]" />
+                                                <x-actions.delete-btn route="admin.projects.destroy" label="Delete" :route-params="[$project->id]" alertTitle="Delete {{$project->name}}"/>
 
                                             </td>
                                         </tr>

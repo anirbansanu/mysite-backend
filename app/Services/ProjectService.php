@@ -11,19 +11,19 @@ class ProjectService
 {
     public function getProjects(Request $request)
     {
-        $searchQuery = $request->input('search_query');
+        $search_query = $request->input('search_query','');
         $sort_by = $request->input('sort_by', 'updated_at');
         $sort_order = $request->input('sort_order', 'desc');
         $paginationLimit = $request->input('pagination_limit', config('app.pagination_limit'));
 
-        $projects = Project::
-            when($searchQuery, function ($query) use ($searchQuery) {
-                $query->where('title', 'like', '%' . $searchQuery . '%')
-                    ->orWhere('description', 'like', '%' . $searchQuery . '%');
+        $projects = Project::when($search_query, function ($query) use ($search_query) {
+                $query->where('title', 'like', '%' . $search_query . '%')
+                    ->orWhere('description', 'like', '%' . $search_query . '%');
             })
             ->orderBy($sort_by, $sort_order)
             ->paginate($paginationLimit);
 
+        $projects->appends(['search_query' => $search_query, 'sort_by' => $sort_by, 'sort_order' => $sort_order]);
         return $projects;
     }
 
