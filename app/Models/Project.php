@@ -18,6 +18,9 @@ class Project extends Model
         'github_link',
         'desc',
     ];
-
+    protected $casts = [
+        'type' => 'array',
+        'badges' => 'array',
+    ];
     // Define any relationships if needed
 }

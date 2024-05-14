@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @section('title')
-    Add Category
+    Add Project
 @endsection
 @section('css')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,11 +17,11 @@
                         <div class="card card-primary card-tabs">
                             <div class="card-header  p-0 pt-1">
                                 <div class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                                    <x-tabs.nav-item route="categories.index" icon="fas fa-list-alt ">Category List</x-tabs.nav-item>
-                                    <x-tabs.nav-item route="categories.create" icon="fas fa-plus-square">Add Category</x-tabs.nav-item>
+                                    <x-tabs.nav-item route="admin.projects.index" icon="fas fa-list-alt ">Project List</x-tabs.nav-item>
+                                    <x-tabs.nav-item route="admin.projects.create" icon="fas fa-plus-square">Add Project</x-tabs.nav-item>
                                 </div>
                             </div>
-                            <form action="{{route('categories.store')}}" method="POST">
+                            <form action="{{route('admin.projects.store')}}" method="POST">
                                 @csrf
                                 <div class="card-body">
                                     <div class="form-group">
@@ -50,9 +50,9 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="parent_id">Parent Category</label>
+                                        <label for="parent_id">Parent Project</label>
                                         <select class="form-control" name="parent_id" id="parent_id">
-                                            <option value="">Select Parent Category</option>
+                                            <option value="">Select Parent Project</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -71,7 +71,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer w-100 d-flex justify-content-end">
-                                    <button type="submit" id="settingUpdate" class="btn btn-primary">Save Category</button>
+                                    <button type="submit" id="settingUpdate" class="btn btn-primary">Save Project</button>
                                 </div>
                             </form>
                         </div>
@@ -100,43 +100,7 @@
 <script >
     $(document).ready(function(){
 
-        $('#parent_id').select2({
-            width: '100%',
-            theme: 'bootstrap4',
-            ajax: {
-                url: "{{route('categories.json')}}",
-                type: "POST",
-                dataType: 'json',
-                delay: 250,
-
-                data: function(params) {
-                    console.log(params);
-                    return {
-                        q: params.term,
-                        page: params.page || 1
-                    };
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.data.map(function(category) {
-                            return {
-                                id: category.id,
-                                text: category.name
-                            };
-                        }),
-                        pagination: {
-                            more: data.current_page < data.last_page
-                        }
-                    };
-                },
-                cache: true
-            },
-            placeholder : 'Select a parent category',
-
-        });
+        
         $(document).on('keyup', '#name', (ev) => {
             let nameValue = $('#name').val();
             let slug = slugify(nameValue);

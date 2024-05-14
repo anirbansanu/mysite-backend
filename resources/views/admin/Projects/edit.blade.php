@@ -32,11 +32,11 @@
                         <div class="card-header p-0 pt-1">
 
                             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                                <x-tabs.nav-item route="categories.index" icon="fas fa-list-alt ">Category List</x-tabs.nav-item>
+                                <x-tabs.nav-item route="project.index" icon="fas fa-list-alt ">Category List</x-tabs.nav-item>
                                 <x-tabs.nav-item route="categories.create" icon="fas fa-plus-square">Add Category</x-tabs.nav-item>
                                 <x-tabs.nav-item route="categories.edit" route-params="{{$category->id}}" icon="fas fa-list-alt ">Edit Category</x-tabs.nav-item>
 
-                                
+
                             </ul>
                         </div>
                         <div class="card-body ">

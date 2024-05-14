@@ -31,7 +31,7 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('admin.projects.create');
+        return view('admin.Projects.create');
     }
 
     public function store(ProjectRequest $request)

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @section('title')
-     project List
+     Project List
 @endsection
 @section('css')
 <style>
@@ -19,8 +19,8 @@
                     <div class="card card-primary card-tabs">
                         <div class="card-header p-0 pt-1">
                             <div class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                                <x-tabs.nav-item route="projects.index" icon="fas fa-list-alt ">project List</x-tabs.nav-item>
-                                <x-tabs.nav-item route="projects.create" icon="fas fa-plus-square">Add project</x-tabs.nav-item>
+                                <x-tabs.nav-item route="admin.projects.index" icon="fas fa-list-alt ">Project List</x-tabs.nav-item>
+                                <x-tabs.nav-item route="admin.projects.create" icon="fas fa-plus-square">Add Project</x-tabs.nav-item>
 
                             </div>
 
@@ -83,7 +83,7 @@
                                             <td>{{$projects->firstItem() + $loop->index}}</td>
                                             <td>{{ $project->title }}</td>
                                             @php
-                                                $types = json_decode($project->type, true); // Convert JSON string to PHP array
+                                                $types = $project->type; // Convert JSON string to PHP array
                                                 $badgeColors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
                                             @endphp
                                             <td>
@@ -99,7 +99,7 @@
                                             </td>
                                             <td>
                                                 @php
-                                                    $badges = json_decode($project->badges, true); // Convert JSON string to PHP array
+                                                    $badges = $project->badges; // Convert JSON string to PHP array
                                                 @endphp
                                                 @if(is_array($badges))
                                                     @foreach($badges as $badge)
@@ -112,7 +112,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ Str::limit($project->desc, 60, '...') }}</td>
-                                            
+
                                             <td>{{ $project->updated_at }}</td>
                                             <td>
                                                 <x-actions.edit-btn route="admin.projects.edit" label="Edit" :route-params="[$project->id]" />
