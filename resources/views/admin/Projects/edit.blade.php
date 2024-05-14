@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @section('title')
-     Category List
+     Project List
 
 @endsection
 @section('css')
@@ -32,64 +32,75 @@
                         <div class="card-header p-0 pt-1">
 
                             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                                <x-tabs.nav-item route="project.index" icon="fas fa-list-alt ">Category List</x-tabs.nav-item>
-                                <x-tabs.nav-item route="categories.create" icon="fas fa-plus-square">Add Category</x-tabs.nav-item>
-                                <x-tabs.nav-item route="categories.edit" route-params="{{$category->id}}" icon="fas fa-list-alt ">Edit Category</x-tabs.nav-item>
+                                <x-tabs.nav-item route="admin.projects.index" icon="fas fa-list-alt ">Project List</x-tabs.nav-item>
+                                <x-tabs.nav-item route="admin.projects.create" icon="fas fa-plus-square">Add Project</x-tabs.nav-item>
+                                <x-tabs.nav-item route="admin.projects.edit" route-params="{{$project->id}}" icon="fas fa-list-alt ">Edit Project</x-tabs.nav-item>
 
 
                             </ul>
                         </div>
                         <div class="card-body ">
                             <!-- This HTML and Blade code for category edit form here -->
-                            <form action="{{ route('categories.update', $category) }}" method="POST">
+                            <form action="{{ route('admin.projects.update', $project->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-                                <!-- Form fields for name, description, etc. -->
-                                <div class="form-group">
-                                    <label for="name">Name :</label>
-                                    <input type="text" name="name" id="name" class="form-control" value="{{ old("name",$category->name) }}" required>
-                                    @error('name')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Slug</label>
-                                    <input type="text" class="form-control" value="{{ old('slug',$category->slug) }}"
-                                        name="slug" id="slug" placeholder="Auto generated" readonly >
-                                        @error('slug')
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="type">Type</label>
+                                        <input type="text" class="form-control" value="{{ implode(', ', $project->type) }}" name="type" id="type" placeholder="Enter type">
+                                        @error('type')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="description">Description </label>
-                                    <textarea name="description" class="form-control" required>{{ old("description",$category->description) }}</textarea>
-                                    @error('description')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label for="parent_id">Parent Category</label>
-                                    <select class="form-control" name="parent_id" id="parent_id">
-                                        <option value="">Select Parent Category</option>
-                                    </select>
+                                    <div class="form-group">
+                                        <label for="title">Title</label>
+                                        <input type="text" class="form-control" value="{{ $project->title }}" name="title" id="title" placeholder="Enter title">
+                                        @error('title')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="badges">Badges</label>
+                                        <input type="text" class="form-control" value="{{ implode(', ', $project->badges) }}" name="badges" id="badges" placeholder="Enter badges">
+                                        @error('badges')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="project_link">Project Link</label>
+                                        <input type="text" class="form-control" value="{{ $project->project_link }}" name="project_link" id="project_link" placeholder="Enter project link">
+                                        @error('project_link')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="github_link">GitHub Link</label>
+                                        <input type="text" class="form-control" value="{{ $project->github_link }}" name="github_link" id="github_link" placeholder="Enter GitHub link">
+                                        @error('github_link')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="image">Image</label>
+                                        @if($project->image)
+                                            <img src="{{ asset('storage/' . $project->image) }}" alt="Project Image" style="max-width: 200px; height: auto;">
+                                        @else
+                                        <input type="file" class="form-control-file" name="image" id="image">
+                                        @error('image')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="desc">Description</label>
+                                        <textarea name="desc" class="form-control" id="desc">{{ $project->desc }}</textarea>
+                                        @error('desc')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="is_active">Status </label><br>
-                                    <input type="checkbox" name="is_active" {{ $category->is_active ? "checked":'' }}
-                                            data-bootstrap-switch=""
-                                            data-on-text="Active"
-                                            data-off-text="Inactive"
-                                            data-handle-width="55px"
-                                            data-label-width="15px"
-                                    />
-                                    @error('is_active')
-                                        <span class="error text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="w-100 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary ">Update Category</button>
+                                <div class="card-footer w-100 d-flex justify-content-end">
+                                    <button type="submit" id="updateProject" class="btn btn-primary">Update Project</button>
                                 </div>
                             </form>
                         </div> <!-- End div.Card Body -->
@@ -118,67 +129,7 @@
 
 <script >
     $(document).ready(function(){
-        @if ($category->parent)
-            var $option =  $("<option selected></option>").val('{{$category->parent->id?? ""}}').text("{{ $category->parent->name ?? "" }}") ;
-            $('#parent_id').append($option).trigger('change');
-        @endif
 
-        $('#parent_id').select2({
-            width: '100%',
-            theme: 'bootstrap4',
-            ajax: {
-                url: "{{route('categories.json')}}",
-                type: "POST",
-                dataType: 'json',
-                delay: 250,
-
-                data: function(params) {
-                    console.log(params);
-                    return {
-                        q: params.term,
-                        page: params.page || 1
-                    };
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.data.map(function(category) {
-                            return {
-                                id: category.id,
-                                text: category.name
-                            };
-                        }),
-                        pagination: {
-                            more: data.current_page < data.last_page
-                        }
-                    };
-                },
-                cache: true
-            },
-            placeholder : 'Select a parent category',
-
-        });
-        $(document).on('keyup', '#name', (ev) => {
-            let nameValue = $('#name').val();
-
-            let slug = slugify(nameValue);
-            $('#slug').val(slug);
-        });
-        $("input[data-bootstrap-switch]").each(function(){
-            $(this).bootstrapSwitch('state', $(this).prop('checked'));
-            $(this).on('switchChange.bootstrapSwitch', function(event, state) {
-                onSwitchChange(state);
-            });
-        });
-        function onSwitchChange(state) {
-            if (state) {
-                console.log("Switch is ON",state);
-            } else {
-                console.log("Switch is OFF",state);
-            }
-        }
 
     });
     function slugify(text) {

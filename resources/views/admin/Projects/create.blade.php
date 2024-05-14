@@ -25,49 +25,54 @@
                                 @csrf
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name</label>
-                                        <input type="text" class="form-control" value="{{ old('name') }}"
-                                            name="name" id="name" placeholder="Enter name" >
-                                            @error('name')
-                                                <span class="error text-danger">{{ $message }}</span>
-                                            @enderror
-
+                                        <label for="type">Type</label>
+                                        <input type="text" class="form-control" value="{{ old('type') }}" name="type" id="type" placeholder="Enter type">
+                                        @error('type')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Slug</label>
-                                        <input type="text" class="form-control" value="{{ old('slug') }}"
-                                            name="slug" id="slug" placeholder="Auto generated" readonly >
-                                            @error('slug')
-                                                <span class="error text-danger">{{ $message }}</span>
-                                            @enderror
 
-                                    </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Description</label>
-                                        <textarea name="description" class="form-control" id="description" >{{ old('description') }}</textarea>
-                                        @error('description')
+                                        <label for="title">Title</label>
+                                        <input type="text" class="form-control" value="{{ old('title') }}" name="title" id="title" placeholder="Enter title">
+                                        @error('title')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="parent_id">Parent Project</label>
-                                        <select class="form-control" name="parent_id" id="parent_id">
-                                            <option value="">Select Parent Project</option>
-                                        </select>
+                                        <label for="badges">Badges</label>
+                                        <input type="text" class="form-control" value="{{ old('badges') }}" name="badges" id="badges" placeholder="Enter badges">
+                                        @error('badges')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="is_active">Status </label><br>
-                                        <input type="checkbox" name="is_active" checked=""
-                                                data-bootstrap-switch=""
-                                                data-size="large"
-                                                data-on-text="Active"
-                                                data-off-text="Inactive"
-                                                data-handle-width="80px"
-                                                data-label-width="25px"
-                                                />
-                                    @error('is_active')
-                                        <span class="error text-danger">{{ $message }}</span>
-                                    @enderror
+                                        <label for="project_link">Project Link</label>
+                                        <input type="text" class="form-control" value="{{ old('project_link') }}" name="project_link" id="project_link" placeholder="Enter project link">
+                                        @error('project_link')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="github_link">GitHub Link</label>
+                                        <input type="text" class="form-control" value="{{ old('github_link') }}" name="github_link" id="github_link" placeholder="Enter GitHub link">
+                                        @error('github_link')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="image">Image</label>
+                                        <input type="file" class="form-control-file" name="image" id="image">
+                                        @error('image')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="desc">Description</label>
+                                        <textarea name="desc" class="form-control" id="desc">{{ old('desc') }}</textarea>
+                                        @error('desc')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="card-footer w-100 d-flex justify-content-end">
@@ -100,7 +105,7 @@
 <script >
     $(document).ready(function(){
 
-        
+
         $(document).on('keyup', '#name', (ev) => {
             let nameValue = $('#name').val();
             let slug = slugify(nameValue);

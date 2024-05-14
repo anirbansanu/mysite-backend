@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\WEB;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Project\ProjectRequest;
+use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,12 +34,17 @@ class ProjectController extends Controller
         return view('admin.Projects.create');
     }
 
-    public function store(ProjectRequest $request)
+    public function store(ProjectCreateRequest $request)
     {
         try {
             $data = $request->validated();
-            Project::create($data);
+            $project = Project::create($data);
+            if ($request->hasFile('image')) {
+                $project->addMedia($request->file('image'))->toMediaCollection('project_images');
+            }
+
             return redirect()->route('projects.index')->with('success', 'Project created successfully.');
+
         } catch (\Exception $e) {
             // Log::error('Error in ProjectController@store: ' . $e->getMessage());
             return redirect()->back()->with('error', 'An error occurred while creating the project.');
@@ -48,7 +53,7 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', compact('project'));
+        return view('admin.Projects.edit', compact('project'));
     }
 
     public function update(ProjectRequest $request, Project $project)
